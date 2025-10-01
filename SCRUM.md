@@ -8,7 +8,7 @@
 
 ### Historias / Backlog
 
-- [ ] **F1-1:** Init repo + Next.js + Tailwind + TypeScript (si usas TS). (3)
+- [X] **F1-1:** Init repo + Next.js + Tailwind + TypeScript. (3)
 - [ ] **F1-2:** Configurar Vercel: project, variables de entorno, previews. (2)
 - [ ] **F1-3:** Diseño UI básico (paleta, tipografía, spacing) + Layout principal (Header, Footer). (5)
 - [ ] **F1-4:** Crear sistema de componentes base: `Button`, `Card`, `Container`, `Avatar`, `Icon`. (5)

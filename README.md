@@ -23,8 +23,6 @@ Interfaz construida con Next.js y desplegada en Vercel. Este repositorio contien
 
 ## 📋 Checklist de avance
 
-> Marca manualmente las casillas en tu README cuando completes cada item.
-
 ### Setup & Infra
 
 - [ ] Inicializar repo (Next.js + TypeScript)
@@ -76,7 +74,7 @@ Interfaz construida con Next.js y desplegada en Vercel. Este repositorio contien
 
 ```bash
 # Clonar repo
-git clone https://github.com/mi-usuario/syncup.git
+git clone https://github.com/walter1705/syncup.git
 cd syncup-frontend
 
 # Instalar dependencias
