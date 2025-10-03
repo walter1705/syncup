@@ -2,20 +2,62 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Home from '@/components/Home/Home';
+import { login, register } from '@/services/auth';
+import { ApiError } from '@/services/api';
 
 export default function Login() {
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement authentication logic
-    console.log('Form submitted:', formData);
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      if (isLogin) {
+        // Login request
+        const response = await login({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        console.log('Login successful:', response);
+
+        // Redirect to dashboard after successful login
+        router.push('/dashboard');
+      } else {
+        // Register request
+        const response = await register({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        });
+
+        console.log('Registration successful:', response);
+
+        // Redirect to dashboard after successful registration
+        router.push('/dashboard');
+      }
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+      }
+      console.error('Authentication error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +65,8 @@ export default function Login() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    // Clear error when user starts typing
+    if (error) setError(null);
   };
 
   return (
@@ -61,6 +105,13 @@ export default function Login() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 text-red-400 text-sm">
+                {error}
+              </div>
+            )}
+
             {!isLogin && (
               <div>
                 <label
@@ -140,9 +191,36 @@ export default function Login() {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-blue-500/50"
+              disabled={isLoading}
+              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              {isLogin ? 'Log In' : 'Sign Up'}
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg
+                    className="animate-spin h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  {isLogin ? 'Logging In...' : 'Signing Up...'}
+                </span>
+              ) : (
+                <>{isLogin ? 'Log In' : 'Sign Up'}</>
+              )}
             </button>
           </form>
 
