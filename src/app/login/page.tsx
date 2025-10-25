@@ -2,16 +2,18 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation'; // TODO: Uncomment when implementing auth logic
 import Home from '@/components/Home/Home';
-import { login, register } from '@/services/auth';
-import { ApiError } from '@/services/api';
+// TODO: Import your auth services when implementing login/register
+// import { login, register } from '@/services/auth';
+// import { ApiError } from '@/services/api';
 
 export default function Login() {
-  const router = useRouter();
+  // const router = useRouter(); // TODO: Uncomment when implementing auth logic
   const [isLogin, setIsLogin] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // TODO: Uncomment these states when implementing auth logic
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,6 +22,13 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // TODO: Implement your authentication logic here
+    console.log('Form submitted:', formData);
+    console.log('Is Login Mode:', isLogin);
+
+    /*
+    // TODO: Replace this comment with your auth implementation
     setError(null);
     setIsLoading(true);
 
@@ -58,6 +67,7 @@ export default function Login() {
     } finally {
       setIsLoading(false);
     }
+    */
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,8 +75,8 @@ export default function Login() {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    // Clear error when user starts typing
-    if (error) setError(null);
+    // TODO: Uncomment when implementing error handling
+    // if (error) setError(null);
   };
 
   return (
@@ -105,12 +115,12 @@ export default function Login() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Error Message */}
-            {error && (
+            {/* TODO: Uncomment Error Message when implementing auth */}
+            {/* {error && (
               <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3 text-red-400 text-sm">
                 {error}
               </div>
-            )}
+            )} */}
 
             {!isLogin && (
               <div>
@@ -191,9 +201,13 @@ export default function Login() {
 
             <button
               type="submit"
-              disabled={isLoading}
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              // TODO: Add disabled={isLoading} when implementing auth
+              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-blue-500/50"
             >
+              {/* TODO: Add loading state when implementing auth */}
+              {isLogin ? 'Log In' : 'Sign Up'}
+
+              {/* TODO: Uncomment loading spinner when implementing auth
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
                   <svg
@@ -221,6 +235,7 @@ export default function Login() {
               ) : (
                 <>{isLogin ? 'Log In' : 'Sign Up'}</>
               )}
+              */}
             </button>
           </form>
 

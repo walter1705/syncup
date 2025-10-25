@@ -1,5 +1,12 @@
-import { apiClient } from './api';
+// TODO: Uncomment and configure for your external auth API
 
+// TODO: Configure your external auth API base URL in .env.local
+// NEXT_PUBLIC_AUTH_API_URL=https://your-external-auth-api.com
+
+// TODO: Uncomment and implement with your external auth API
+// import { apiClient } from './api';
+
+// TODO: Define your auth interfaces when implementing
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -20,47 +27,79 @@ export interface AuthResponse {
   };
 }
 
+/* TODO: Implement these functions with your external auth API
+
 /**
  * Login user with email and password
+ * Endpoints: /api/login
  * @param credentials - User login credentials
  * @returns Promise with authentication response containing JWT token
  */
-export const login = async (
-  credentials: LoginCredentials
-): Promise<AuthResponse> => {
-  const response = await apiClient.post<AuthResponse>(
-    '/auth/login',
-    credentials
-  );
+/*
+export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
+  // TODO: Use your external auth API URL from environment variables
+  const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL;
+  
+  const response = await fetch(`${AUTH_API_URL}/api/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(credentials),
+  });
 
-  // Store JWT token in localStorage
-  if (response.token) {
-    localStorage.setItem('token', response.token);
+  if (!response.ok) {
+    throw new Error('Login failed');
   }
 
-  return response;
+  const data = await response.json();
+  
+  // Store JWT token in localStorage
+  if (data.token) {
+    localStorage.setItem('token', data.token);
+  }
+  
+  return data;
 };
+*/
+
+/* TODO: Implement register function with your external auth API
 
 /**
  * Register a new user
+ * Endpoints: /api/register
  * @param credentials - User registration credentials
  * @returns Promise with authentication response containing JWT token
  */
-export const register = async (
-  credentials: RegisterCredentials
-): Promise<AuthResponse> => {
-  const response = await apiClient.post<AuthResponse>(
-    '/auth/register',
-    credentials
-  );
+/*
+export const register = async (credentials: RegisterCredentials): Promise<AuthResponse> => {
+  // TODO: Use your external auth API URL from environment variables
+  const AUTH_API_URL = process.env.NEXT_PUBLIC_AUTH_API_URL;
+  
+  const response = await fetch(`${AUTH_API_URL}/api/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(credentials),
+  });
 
-  // Store JWT token in localStorage
-  if (response.token) {
-    localStorage.setItem('token', response.token);
+  if (!response.ok) {
+    throw new Error('Registration failed');
   }
 
-  return response;
+  const data = await response.json();
+  
+  // Store JWT token in localStorage
+  if (data.token) {
+    localStorage.setItem('token', data.token);
+  }
+  
+  return data;
 };
+*/
+
+// Utility functions (keep these, they're needed for token management)
 
 /**
  * Logout user by removing token from localStorage

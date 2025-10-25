@@ -1,4 +1,10 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'api needed';
+// TODO: Configure for external API usage
+// This API client can be used for other endpoints (not auth)
+
+// TODO: Configure your main API URL in .env.local
+// NEXT_PUBLIC_API_URL=https://your-main-api.com/api
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
 export class ApiError extends Error {
   constructor(
@@ -12,7 +18,8 @@ export class ApiError extends Error {
 }
 
 /**
- * API Client for making HTTP requests
+ * API Client for making HTTP requests (non-auth endpoints)
+ * For auth endpoints, use the external auth API directly in auth.ts
  */
 class ApiClient {
   private baseURL: string;
@@ -25,9 +32,8 @@ class ApiClient {
    * Get authorization headers with JWT token
    */
   private getAuthHeaders(): HeadersInit {
-    const token =
-      typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
     };
