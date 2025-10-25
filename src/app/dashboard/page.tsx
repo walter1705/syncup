@@ -1,16 +1,23 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+// TODO: Uncomment when implementing authentication
+// import { useEffect } from 'react';
+// import { useAuth } from '@/hooks/useAuth';
 
 export default function Dashboard() {
-  const { isLoggedIn, isLoading, logout, requireAuth } = useAuth();
+  // TODO: Uncomment when implementing authentication
+  // const { isLoggedIn, isLoading, logout, requireAuth } = useAuth();
 
+  // TODO: Uncomment when implementing authentication
+  /*
   useEffect(() => {
     // Require authentication to access this page
     requireAuth();
   }, [isLoggedIn, isLoading, requireAuth]);
+  */
 
+  // TODO: Uncomment loading and auth checks when implementing authentication
+  /*
   // Show loading state while checking authentication
   if (isLoading) {
     return (
@@ -27,6 +34,7 @@ export default function Dashboard() {
   if (!isLoggedIn) {
     return null;
   }
+  */
 
   return (
     <div className="min-h-screen bg-[var(--color-background-content)] text-white">
@@ -35,12 +43,13 @@ export default function Dashboard() {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
             Dashboard
           </h1>
-          <button
+          {/* TODO: Uncomment logout button when implementing authentication */}
+          {/* <button
             onClick={logout}
             className="px-6 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition-all hover:scale-105"
           >
             Logout
-          </button>
+          </button> */}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

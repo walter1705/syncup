@@ -4,6 +4,7 @@ import { isAuthenticated, logout as authLogout } from '@/services/auth';
 
 /**
  * Custom hook to handle authentication state
+ * TODO: This hook is ready to use when you implement the auth functions
  * @returns Authentication state and functions
  */
 export function useAuth() {
@@ -14,6 +15,7 @@ export function useAuth() {
   useEffect(() => {
     // Check authentication on mount
     const checkAuth = () => {
+      // TODO: This will work when isAuthenticated is implemented
       const authenticated = isAuthenticated();
       setIsLoggedIn(authenticated);
       setIsLoading(false);
@@ -24,9 +26,10 @@ export function useAuth() {
 
   /**
    * Logout user and redirect to login page
+   * TODO: This will work when logout function is implemented
    */
   const logout = () => {
-    authLogout();
+    authLogout(); // This function is available (just clears localStorage)
     setIsLoggedIn(false);
     router.push('/login');
   };
