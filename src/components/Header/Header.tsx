@@ -3,7 +3,7 @@ import Button from '@/components/Button/Button';
 
 export default function Header() {
   return (
-    <header className="bg-[var(--foreground)]  sticky top-0 z-50 backdrop-blur-sm shadow-sm">
+    <header className="bg-[var(--foreground)]  sticky top-0 z-50 backdrop-blur-sm shadow-sm ">
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <Link

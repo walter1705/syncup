@@ -32,8 +32,9 @@ class ApiClient {
    * Get authorization headers with JWT token
    */
   private getAuthHeaders(): HeadersInit {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    
+    const token =
+      typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
     };
