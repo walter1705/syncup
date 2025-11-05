@@ -4,59 +4,88 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Home from '@/components/Home/Home';
-import { login, register } from '@/services/auth';
-import { ApiError } from '@/services/api';
+import { useApi } from '@/hooks/useApi';
+import { useAuth } from '@/hooks/useAuth';
+
+// Interfaces para las respuestas de la API
+interface LoginResponse {
+  token?: string;
+  message?: string;
+  user?: {
+    id: string;
+    username: string;
+    email: string;
+  };
+}
+
+interface RegisterResponse {
+  token?: string;
+  message?: string;
+  user?: {
+    id: string;
+    username: string;
+    email: string;
+  };
+}
 
 export default function Login() {
+  // Auto-redirige a dashboard si ya tiene token
+  useAuth();
+
   const router = useRouter();
+  const { post, isLoading, error, clearError } = useApi();
   const [isLogin, setIsLogin] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
+    firstname: '',
+    lastname: '',
     email: '',
     password: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setIsLoading(true);
 
     try {
       if (isLogin) {
-        // Login request
-        const response = await login({
-          email: formData.email,
+        // Login request to /login endpoint
+        const response = await post<LoginResponse>('/auth/login', {
+          username: formData.username,
           password: formData.password,
         });
 
         console.log('Login successful:', response);
 
+        // Guardar token en localStorage si existe
+        if (response.token) {
+          localStorage.setItem('authToken', response.token);
+        }
+
         // Redirect to dashboard after successful login
         router.push('/dashboard');
       } else {
-        // Register request
-        const response = await register({
-          name: formData.name,
-          email: formData.email,
+        // Register request to /register endpoint
+        const response = await post<RegisterResponse>('/auth/register', {
+          username: formData.username,
           password: formData.password,
+          firstname: formData.firstname,
+          lastname: formData.lastname,
+          email: formData.email,
         });
 
         console.log('Registration successful:', response);
+
+        // Guardar token en localStorage si existe
+        if (response.token) {
+          localStorage.setItem('authToken', response.token);
+        }
 
         // Redirect to dashboard after successful registration
         router.push('/dashboard');
       }
     } catch (err) {
-      if (err instanceof ApiError) {
-        setError(err.message);
-      } else {
-        setError('An unexpected error occurred. Please try again.');
-      }
       console.error('Authentication error:', err);
-    } finally {
-      setIsLoading(false);
+      // El error ya está siendo manejado por el hook useApi
     }
   };
 
@@ -65,8 +94,8 @@ export default function Login() {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    // Clear error when user starts typing
-    if (error) setError(null);
+    // Limpiar error cuando el usuario empieza a escribir
+    if (error) clearError();
   };
 
   return (
@@ -112,46 +141,89 @@ export default function Login() {
               </div>
             )}
 
-            {!isLogin && (
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-300 mb-2"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required={!isLogin}
-                  className="w-full px-4 py-3 bg-gray-900 border border-blue-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                  placeholder="Enter your name"
-                />
-              </div>
-            )}
-
+            {/* Username field - always visible */}
             <div>
               <label
-                htmlFor="email"
+                htmlFor="username"
                 className="block text-sm font-medium text-gray-300 mb-2"
               >
-                Email
+                Username
               </label>
               <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 bg-gray-900 border border-blue-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-                placeholder="Enter your email"
+                placeholder="Enter your username"
               />
             </div>
 
+            {/* Register-only fields */}
+            {!isLogin && (
+              <>
+                <div>
+                  <label
+                    htmlFor="firstname"
+                    className="block text-sm font-medium text-gray-300 mb-2"
+                  >
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    id="firstname"
+                    name="firstname"
+                    value={formData.firstname}
+                    onChange={handleChange}
+                    required={!isLogin}
+                    className="w-full px-4 py-3 bg-gray-900 border border-blue-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                    placeholder="Enter your first name"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="lastname"
+                    className="block text-sm font-medium text-gray-300 mb-2"
+                  >
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    id="lastname"
+                    name="lastname"
+                    value={formData.lastname}
+                    onChange={handleChange}
+                    required={!isLogin}
+                    className="w-full px-4 py-3 bg-gray-900 border border-blue-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                    placeholder="Enter your last name"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-300 mb-2"
+                  >
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required={!isLogin}
+                    className="w-full px-4 py-3 bg-gray-900 border border-blue-500/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                    placeholder="Enter your email"
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Password field - always visible */}
             <div>
               <label
                 htmlFor="password"

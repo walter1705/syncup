@@ -21,3 +21,33 @@ body {
   color: var(--foreground);
   font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
 }
+
+html {
+  background: var(--foreground);
+}
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #161515;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #1e3a8a, #3b82f6);
+  border-radius: 10px;
+  border: 2px solid #161515;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #2563eb, #2587ff);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #3b82f6 #161515;
+}
